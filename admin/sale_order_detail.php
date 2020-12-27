@@ -26,13 +26,12 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Orders Listing</h3>
+                <h3 class="card-title">Orders Detail</h3>
               </div>
-                            <!-- /.card-header -->
+            <!-- /.card-header -->
             <div class="card-body">
-                  <div class="">
-                    <a href="cat_add.php" class="btn btn-success">Create New Order</a>
-                  </div>                <br>
+                <a href="order.php" class="btn btn-outline-primary">Back</a>
+                <br><br>
                 <table class="table table-bordered">
                   <thead>                  
                     <tr>
@@ -47,20 +46,19 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                     $numOfRec=5;
                     $offSet=($pageno -1 )* $numOfRec;
                     
-                      $stmt=$pdo->prepare("SELECT * FROM sale_orders ORDER BY id DESC");
+                      $stmt=$pdo->prepare("SELECT * FROM sale_order_detail WHERE sale_order_id=".$_GET['id']);
                       $stmt->execute();
                       $rawResult= $stmt->fetchAll();
                       $total_page= ceil(count($rawResult)/$numOfRec);
                       
-                    $stmt=$pdo->prepare("SELECT * FROM sale_orders ORDER BY id DESC LIMIT $offSet,$numOfRec");
+                    $stmt=$pdo->prepare("SELECT * FROM sale_order_detail WHERE sale_order_id=".$_GET['id']);
                     $stmt->execute();
                     $result= $stmt->fetchAll();
                     ?>
                       <th style="width: 10px">#</th>
-                      <th>Users</th>
-                      <th>Total Price</th>
+                      <th>Product</th>
+                      <th>Quantity</th>
                       <th>Order Date</th>
-                      <th style="width: 40px">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -69,26 +67,17 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                           $i=1;
                           foreach($result as $value){
                            
-                        $stmtUser=$pdo->prepare("SELECT * FROM users WHERE id=".$value['user_id']);
-                        $stmtUser->execute();
-                        $resultUser=$stmtUser->fetchAll();
+                        $stmtPro=$pdo->prepare("SELECT * FROM products WHERE id=".$value['product_id']);
+                        $stmtPro->execute();
+                        $resultPro=$stmtPro->fetchAll();
                     ?>
                     <tr>
                       <td><?php echo $i; ?></td>
-                      <td><?php echo $resultUser[0]['name']; ?></td>
+                      <td><?php echo $resultPro[0]['name']; ?></td>
                       <td>
-                        <?php echo $value['total_price']; ?>
+                        <?php echo $value['quantity']; ?>
                       </td>
                       <td><?php echo date('Y-m-d',strtotime($value['order_date'])) ?></td>
-                      <td>
-                        <div class="row">
-                          <div class="btn-group">
-                            <div class="container">
-                              <a href="sale_order_detail.php?id=<?php echo $value['id']; ?>" class="btn btn-warning">Detail</a>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
                     </tr>
                           <?php
                         $i++;
