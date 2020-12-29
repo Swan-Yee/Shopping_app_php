@@ -73,10 +73,9 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                       <th style="width: 10px">#</th>
                       <th>Name</th>
                       <th>Description</th>
-                      <th>Categroy_id</th>
+                      <th>Categroy</th>
                       <th>Qantity</th>
                       <th>Price</th>
-                      <th>image</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -91,10 +90,13 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                       <td>
                         <?php echo substr($value['description'], 0, 100) ?>
                       </td>
-                      <td><?php echo $value['category_id']; ?></td>
+                      <?php $catStmt=$pdo->prepare("SELECT * FROM categories WHERE id=".$value['category_id']); 
+                            $catStmt->execute();
+                            $catResult=$catStmt->fetchAll();
+                      ?>
+                      <td><?php echo $catResult[0]['name']; ?></td>
                       <td><?php echo $value['quantity']; ?></td>
                       <td><?php echo $value['price']; ?></td>
-                      <td><?php echo $value['image']; ?></td> 
                       <td>
                         <div class="row">
                           <div class="btn-group">

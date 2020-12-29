@@ -58,7 +58,7 @@ if($_POST){
       );
   
       if($result){
-          echo "<script>alert('Successfully Add!');window.location.href='product_add.php';</script>";     
+          echo "<script>alert('Successfully Add!');window.location.href='index.php';</script>";     
       }
     } 
   }

@@ -32,9 +32,6 @@ if($_POST){
     if(empty($_FILES['image'])){
         $image=$_POST['oImage'];
       }
-      else{
-
-      }
 
     $file= 'product_image/'.($_FILES['image']['name']);
     $imgType=pathinfo($file,PATHINFO_EXTENSION);
@@ -120,7 +117,7 @@ if($_POST){
                             <input type="number" name="price" id="price" class="form-control" value="<?php echo $result[0]['price'] ?>">
                         </div>
                         <div class="from-group">
-                            <img src="product_image/<?php echo $result[0]['image'] ?>" alt="" srcset="" width="500" height="300">
+                            <img src="product_image/<?php echo $result[0]['image'] ?>" alt="" srcset="" width="500" height="500">
                         </div>
                         <div class="form-group">
                             <label for="image">Image</label>
