@@ -7,6 +7,15 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
     header('location: login.php');
 }
 
+$stmt=$pdo->prepare("SELECT role FROM users WHERE id=".$_SESSION['user_id']);
+$stmt->execute();
+$result=$stmt->fetchAll();
+
+if($result[0]['role'] == 0){
+  header('location: login.php');
+}
+
+
 if($_POST){
   if(empty($_POST['name']) || empty($_POST['description']) || empty($_POST['price']) || empty($_POST['quantity']) || empty($_POST['category'])){
     if(empty($_POST['name'])){

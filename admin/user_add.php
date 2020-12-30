@@ -7,6 +7,15 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
     header('location: login.php');
 }
 
+$stmt=$pdo->prepare("SELECT role FROM users WHERE id=".$_SESSION['user_id']);
+$stmt->execute();
+$result=$stmt->fetchAll();
+
+if($result[0]['role'] == 0){
+  header('location: login.php');
+}
+
+
 if($_POST){
   if(empty($_POST['name']) || empty($_POST['mail']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['phone'])){
     if(empty($_POST['name'])){
@@ -31,20 +40,20 @@ if($_POST){
   else{
       $name=$_POST['name'];
       $mail=$_POST['mail'];
-      $password=$_POST['password'];
+      $password= password_hash($_POST['password'], PASSWORD_DEFAULT);;
       $address=$_POST['address'];
       $phone=$_POST['phone'];
 
-      if($_POST['admin']){
+      if(isset($_POST['admin'])){
           $role= 1;
       }else{
           $role=0;
       }
 
-      $stmt=$pdo->prepare("INSERT INTO users(name,email,password,address,phone,role) VALUES (:name,:mail,:password,:address,:phone,:role)");
-      $result=$stmt->execute(
-          array(':name'=>$name,':mail'=>$mail,':password'=>$password,':address'=>$address,':phone'=>$phone,':role'=>$role)
-      );
+        $stmt=$pdo->prepare("INSERT INTO users(name,email,password,address,phone,role) VALUES (:name,:mail,:password,:address,:phone,:role)");
+        $result=$stmt->execute(
+            array(':name'=>$name,':mail'=>$mail,':password'=>$password,':address'=>$address,':phone'=>$phone,':role'=>$role)
+        );
   
       if($result){
           echo "<script>alert('Successfully Add!');window.location.href='user.php';</script>";     

@@ -1,3 +1,14 @@
+<?php 
+if (!empty($_POST['search'])) {
+  setcookie('search',$_POST['search'], time() + (86400 * 30), "/");
+}else{
+  if (empty($_GET['pageno'])) {
+    unset($_COOKIE['search']); 
+    setcookie('search', null, -1, '/'); 
+  }
+}
+?>
+<?php include('header.php'); ?>
 <?php
 	session_start();
 	require 'config/config.php';
@@ -10,7 +21,7 @@
 	 $pageno=1;
 	}
 	
-	$numOfRec=5;
+	$numOfRec=1;
 	$offSet=($pageno -1 )* $numOfRec;
 
 
@@ -26,7 +37,7 @@
 	}
 	else
 	{
-		if(empty($_POST['search'])){
+		if(empty($_POST['search']) && empty($_COOKIE['search'])){
 			$stmt=$pdo->prepare("SELECT * FROM products ORDER BY id DESC");
 			$stmt->execute();
 			$rawResult= $stmt->fetchAll();
@@ -37,7 +48,7 @@
 		  $result= $stmt->fetchAll();
 		  }
 		  else{
-			$searchKey=$_POST['search'];
+			$searchKey= $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
 			  $stmt=$pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchKey%' ORDER BY id DESC");
 			  $stmt->execute();
 			  $rawResult= $stmt->fetchAll();
@@ -49,7 +60,6 @@
 		  }
 	}
 ?>
-<?php include('header.php'); ?>
 <div class="container">
 		<div class="row">
 			<div class="col-xl-3 col-lg-4 col-md-5">

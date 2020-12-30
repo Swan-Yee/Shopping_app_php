@@ -47,7 +47,7 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                     $offSet=($pageno -1 )* $numOfRec;
                     
                     if(empty($_POST['search'])){
-                      $stmt=$pdo->prepare("SELECT * FROM categories ORDER BY id DESC");
+                      $stmt=$pdo->prepare("SELECT * FROM users ORDER BY id DESC");
                       $stmt->execute();
                       $rawResult= $stmt->fetchAll();
                       $total_page= ceil(count($rawResult)/$numOfRec);

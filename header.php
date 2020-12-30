@@ -46,18 +46,25 @@
 						<span class="icon-bar"></span>
 					</button>
 					<!-- Collect the nav links, forms, and other content for toggling -->
-					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item">
-								<a href="#" class="cart">
-									<span class="ti-bag"></span>
-								</a>
-							</li>
-							<li class="nav-item">
-								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-							</li>
-						</ul>
-					</div>
+					
+							<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+							<ul class="nav navbar-nav navbar-right">
+								<li class="nav-item">
+									<a href="#" class="cart">
+										<span class="ti-bag"></span>
+									</a>
+								</li>
+								<?php 
+						if(strpos($_SERVER['REQUEST_URI'], 'detail.php') == false){
+							?>
+								<li class="nav-item">
+									<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+								</li>
+								<?php
+						}
+					?>
+							</ul>
+						</div>
 				</div>
 			</nav>
 		</div>

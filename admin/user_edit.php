@@ -7,6 +7,15 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
     header('location: login.php');
 }
 
+$stmt=$pdo->prepare("SELECT role FROM users WHERE id=".$_SESSION['user_id']);
+$stmt->execute();
+$result=$stmt->fetchAll();
+
+if($result[0]['role'] == 0){
+  header('location: login.php');
+}
+
+
 if($_GET){
     $id=$_GET['id'];
     $stmt=$pdo->prepare('SELECT * FROM users WHERE id= 2');
