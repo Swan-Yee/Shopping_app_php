@@ -26,25 +26,20 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Orders Detail</h3>
+                <h3 class="card-title">Royal User List</h3>
               </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <a href="order.php" class="btn btn-outline-primary">Back</a>
-                <br><br>
-                <table class="table table-bordered">
+              <div class="card-body">
+                <table class="table table-bordered display" id="d-table" style="width:100%">
                   <thead>                  
                     <tr>
-                    <?php
-
-                    $stmt=$pdo->prepare("SELECT * FROM sale_order_detail WHERE sale_order_id=".$_GET['id']);
-                    $stmt->execute();
-                    $result= $stmt->fetchAll();
+                    <?php         
+                        $stmt=$pdo->prepare("SELECT * FROM sale_orders WHERE total_price>100000 ORDER BY id DESC");
+                        $stmt->execute();
+                          $result=$stmt->fetchAll();          
                     ?>
                       <th style="width: 10px">#</th>
-                      <th>Product</th>
-                      <th>Quantity</th>
-                      <th>Order Date</th>
+                      <th>UserID</th>
+                      <th>Total Amount</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -52,18 +47,18 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                         if($result){
                           $i=1;
                           foreach($result as $value){
-                           
-                        $stmtPro=$pdo->prepare("SELECT * FROM products WHERE id=".$value['product_id']);
-                        $stmtPro->execute();
-                        $resultPro=$stmtPro->fetchAll();
+                            
+                        $userStmt=$pdo->prepare("SELECT * FROM users WHERE id=".$value['user_id']); 
+                        $userStmt->execute();
+                        $userResult=$userStmt->fetchAll();
+                            
                     ?>
                     <tr>
                       <td><?php echo $i; ?></td>
-                      <td><?php echo $resultPro[0]['name']; ?></td>
+                      <td><?php echo $userResult[0]['name']; ?></td>
                       <td>
-                        <?php echo $value['quantity']; ?>
+                        <?php echo substr($value['total_price'], 0, 100) ?>
                       </td>
-                      <td><?php echo date('Y-m-d',strtotime($value['order_date'])) ?></td>
                     </tr>
                           <?php
                         $i++;
@@ -73,7 +68,9 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                   </tbody>
                 </table>
               </div>
-
+              
+              <!-- /.card-body -->
+            </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->

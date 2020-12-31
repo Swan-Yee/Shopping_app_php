@@ -33,7 +33,7 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                   <div class="">
                     <a href="cat_add.php" class="btn btn-success">Create New Order</a>
                   </div>                <br>
-                <table class="table table-bordered">
+                  <table class="table table-bordered display" id="table" style="width:100%">
                   <thead>                  
                     <tr>
                     <?php

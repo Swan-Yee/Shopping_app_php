@@ -1,5 +1,4 @@
 <?php
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (!hash_equals($_SESSION['_token'], $_POST['_token'])){
 	  echo 'Invalid CSRF token';

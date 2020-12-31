@@ -48,22 +48,28 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					
 							<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+
+							<?php
+							$card=0; 
+								if(isset($_SESSION['card'])){
+									foreach($_SESSION['card'] as $key => $qty){
+										$card += $qty;
+								} 
+							}					
+							?>
 							<ul class="nav navbar-nav navbar-right">
 								<li class="nav-item">
-									<a href="#" class="cart">
-										<span class="ti-bag"></span>
+									<a href="card.php" class="cart">
+										<span class="ti-bag"><?php echo $card ?></span>
 									</a>
 								</li>
 								<?php 
-						if(strpos($_SERVER['REQUEST_URI'], 'detail.php') == false){
+						if(strpos($_SERVER['REQUEST_URI'], 'index.php') !== false){
 							?>
 								<li class="nav-item">
 									<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
 								</li>
-								<?php
-						}
-					?>
-							</ul>
+								</ul>
 						</div>
 				</div>
 			</nav>
@@ -78,16 +84,20 @@
 				</form>
 			</div>
 		</div>
+								<?php
+						}
+					?>
+			
 	</header>
 	<!-- End Header Area -->
 
 	<!-- Start Banner Area -->
-	<section class="banner-area organic-breadcrumb">
+	<section class="banner-area organic-breadcrumb m-0">
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>Welcome</h1>
-
+					<h1>Welcome <?php echo $_SESSION['user_name']; ?></h1>
+					<a href="logout.php" class="btn btn-danger float-right">Logout</a>
 				</div>
 			</div>
 		</div>

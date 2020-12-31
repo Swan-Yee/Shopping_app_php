@@ -1,4 +1,5 @@
-<?php 
+<?php
+session_start(); 
 if (!empty($_POST['search'])) {
   setcookie('search',$_POST['search'], time() + (86400 * 30), "/");
 }else{
@@ -7,10 +8,14 @@ if (!empty($_POST['search'])) {
     setcookie('search', null, -1, '/'); 
   }
 }
+
+if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
+	header('location: login.php');
+}
+
 ?>
 <?php include('header.php'); ?>
 <?php
-	session_start();
 	require 'config/config.php';
 	require 'config/common.php';
 
@@ -21,44 +26,41 @@ if (!empty($_POST['search'])) {
 	 $pageno=1;
 	}
 	
-	$numOfRec=1;
+	$numOfRec=5;
 	$offSet=($pageno -1 )* $numOfRec;
-
-
-	if(isset($_GET['cat'])){
-		$catStmt=$pdo->prepare("SELECT id FROM categories WHERE id=".$_GET['cat']);
-		$catStmt->execute();
-		$catResult=$catStmt->fetchAll();
-
-		$stmt=$pdo->prepare("SELECT * FROM products WHERE category_id=".$catResult[0][0]);
-		$stmt->execute();
-		$result=$stmt->fetchAll();
-		$total_page= ceil(count($result)/$numOfRec);
-	}
-	else
-	{
+	
 		if(empty($_POST['search']) && empty($_COOKIE['search'])){
-			$stmt=$pdo->prepare("SELECT * FROM products ORDER BY id DESC");
+			$stmt=$pdo->prepare("SELECT * FROM products WHERE quantity > 0 ORDER BY id DESC");
 			$stmt->execute();
 			$rawResult= $stmt->fetchAll();
 			$total_page= ceil(count($rawResult)/$numOfRec);
 			
-		  $stmt=$pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offSet,$numOfRec");
+		  $stmt=$pdo->prepare("SELECT * FROM products WHERE quantity >0 ORDER BY id DESC LIMIT $offSet,$numOfRec");
 		  $stmt->execute();
 		  $result= $stmt->fetchAll();
+		  	
+			if(isset($_GET['cat'])){
+				$catStmt=$pdo->prepare("SELECT id FROM categories WHERE id=".$_GET['cat']);
+				$catStmt->execute();
+				$catResult=$catStmt->fetchAll();
+
+				$stmt=$pdo->prepare("SELECT * FROM products WHERE category_id=".$catResult[0][0]." AND quantity > 0");
+				$stmt->execute();
+				$result=$stmt->fetchAll();
+				$total_page= ceil(count($result)/$numOfRec);
+			}
 		  }
 		  else{
 			$searchKey= $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
-			  $stmt=$pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchKey%' ORDER BY id DESC");
+			  $stmt=$pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchKey%' AND quantity > 0 ORDER BY id DESC");
 			  $stmt->execute();
 			  $rawResult= $stmt->fetchAll();
 			  $total_page= ceil(count($rawResult)/$numOfRec);
 	  
-			$stmt=$pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offSet,$numOfRec");
+			$stmt=$pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchKey%' AND quantity > 0 ORDER BY id DESC LIMIT $offSet,$numOfRec");
 			$stmt->execute();
 			$result= $stmt->fetchAll();
 		  }
-	}
 ?>
 <div class="container">
 		<div class="row">
@@ -112,14 +114,21 @@ if (!empty($_POST['search'])) {
 										<h6><?php echo escape($value['price']) ?></h6>
 									</div>
 									<div class="prd-bottom">
+										<form action="add_to_card.php" method="post">
+											<input type="hidden" name="_token" value="<?php echo $_SESSION['_token'] ?>">
+											<input type="hidden" name="id" value="<?php echo $value['id'] ?>">
+											<input type="hidden" name="qty" value="1">
 										<a href="" class="social-info">
+											<button type="submit" style="display:contents">
 											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
+											<p class="hover-text" style="left: 20px">add to bag</p>
+											</button>
+											</a>
 										<a href="product_detail.php?id=<?php echo $value['id'] ?>" class="social-info">
 											<span class="lnr lnr-move"></span>
 											<p class="hover-text">view more</p>
 										</a>
+										</form>
 									</div>
 								</div>
 							</div>

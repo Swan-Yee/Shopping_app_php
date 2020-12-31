@@ -32,7 +32,7 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                   <div class="">
                     <a href="user_add.php" class="btn btn-success">Create New Users</a>
                   </div>                <br>
-                <table class="table table-bordered">
+                  <table class="table table-bordered display" id="table" style="width:100%">
                   <thead>                  
                     <tr>
                     <?php
@@ -46,7 +46,6 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                     $numOfRec=5;
                     $offSet=($pageno -1 )* $numOfRec;
                     
-                    if(empty($_POST['search'])){
                       $stmt=$pdo->prepare("SELECT * FROM users ORDER BY id DESC");
                       $stmt->execute();
                       $rawResult= $stmt->fetchAll();
@@ -55,19 +54,7 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
                     $stmt=$pdo->prepare("SELECT * FROM users ORDER BY id DESC LIMIT $offSet,$numOfRec");
                     $stmt->execute();
                     $result= $stmt->fetchAll();
-                    }
-                    else{
-                      $searchKey=$_POST['search'];
-                        $stmt=$pdo->prepare("SELECT * FROM categories WHERE title LIKE '%$searchKey%' ORDER BY id DESC");
-                        $stmt->execute();
-                        $rawResult= $stmt->fetchAll();
-                        $total_page= ceil(count($rawResult)/$numOfRec);
-  
-                      $stmt=$pdo->prepare("SELECT * FROM useres WHERE name LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offSet,$numOfRec");
-                      $stmt->execute();
-                      $result= $stmt->fetchAll();
-                    }
-
+                    
                     ?>
                       <th style="width: 10px">#</th>
                       <th>Name</th>

@@ -20,10 +20,21 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<!-- jQuery -->
+<script>
+  $(document).ready(function() {
+    $('#d-table').DataTable();
+} );
+
+$('#table').dataTable( {
+    "paging": false,        
+    "info":     false
+} );
+
+</script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
